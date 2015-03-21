@@ -1,0 +1,44 @@
+<head>
+  <title>reactive-sub</title>
+</head>
+
+<body>
+  <h1>Is the new "template.subscribe() reactive? (No!)"</h1>
+
+  <p>
+    We are subscribing to the list of People (who have "name" and "age" properties)
+    and we use the button to change the "age" via Session variable.
+  </p>
+  <p>
+    EXPECTED: the instansce-method <b>this.subscribe('people', Session.get('age'))</b> for the <i>Template.people</i> should:
+    <ol>
+      <li>
+        re-run upon the change of "age" and re-subscribe to the "people" publication;
+      </li>
+      <li>
+        only show People who have "age" equal to the one set via Session.set('age', x).
+      </li>
+    </ol>
+  </p>
+
+  {{> people}}
+
+  <p>
+    <h3>Solution:</h3>
+    So, in order to make <b>"template.subscribe()"</b> reactively re-subscribe we need to put it inside another template-instance-method called <b>"template.autorun()"</b>
+    <a href="https://docs.meteor.com/#/full/Blaze-TemplateInstance-subscribe">
+       like suggested by docs</a>
+  </p>
+</body>
+
+<template name="people">
+  <button>Change the Age</button>
+  <p>You've set the "age" to: {{ageVar}}</p>
+  <hr>
+  <ul>
+  {{#each persons}}
+    <li>{{name}} is --- {{age}} years old.</li>
+  {{/each}}
+  </ul>
+  <hr>
+</template>
